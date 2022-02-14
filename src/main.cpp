@@ -1,33 +1,39 @@
-#define cimg_use_jpeg
-
 #include <iostream>
 #include <string>
 #include <glm.hpp>
-
-#include <CImg.h>
 #include "Pixel.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include <stb_image_resize.h>
+
 using namespace std;
-using namespace cimg_library;
 using namespace glm;
 
 int main()
 {
-    string srcImage;
-    CImg<unsigned char> image("lena.jpg"), visu(500, 400, 1, 3, 0);
-    const unsigned char red[] = {255, 0, 0}, green[] = {0, 255, 0}, blue[] = {0, 0, 255};
-    image.blur(2.5);
-    CImgDisplay main_disp(image, "Click a point"), draw_disp(visu, "Intensity profile");
-    while (!main_disp.is_closed() && !draw_disp.is_closed())
+    int width, height, channels;
+    unsigned char *img = stbi_load("lena.jpg", &width, &height, &channels, 0);
+
+    int ow = width / 2;
+    int oh = height / 2;
+    auto *odata = (unsigned char *)malloc(ow * oh * channels);
+
+    if (img == nullptr)
     {
-        main_disp.wait();
-        if (main_disp.button() && main_disp.mouse_y() >= 0)
-        {
-            const int y = main_disp.mouse_y();
-            visu.fill(0).draw_graph(image.get_crop(0, y, 0, 0, image.width() - 1, y, 0, 0), red, 1, 1, 0, 255, 0);
-            visu.draw_graph(image.get_crop(0, y, 0, 1, image.width() - 1, y, 0, 1), green, 1, 1, 0, 255, 0);
-            visu.draw_graph(image.get_crop(0, y, 0, 2, image.width() - 1, y, 0, 2), blue, 1, 1, 0, 255, 0).display(draw_disp);
-        }
+        printf("Error in loading the image\n");
+        exit(1);
     }
+
+    stbir_resize(img, width, height, 0, odata, ow, oh, 0, STBIR_TYPE_UINT8, channels, STBIR_ALPHA_CHANNEL_NONE, 0,
+                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
+                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
+                 STBIR_COLORSPACE_SRGB, nullptr);
+    stbi_write_png("output.jpeg", ow, oh, channels, odata, 0);
+    stbi_image_free(img);
+    stbi_image_free(odata);
     return 0;
 }
