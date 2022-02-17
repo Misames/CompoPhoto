@@ -1,9 +1,14 @@
-#include "Pixel.hpp"
+#include "pixel.h"
 
-Pixel::Pixel()
-{
+pixel::pixel() {
+	this->color = RGB();
+	this->x = 0;
+	this->y = 0;
 }
 
-Pixel::~Pixel()
-{
+RGB::RGB() {
+	this->A = 0;
+	this->R = 0;
+	this->G = 0;
+	this->B = 0;
 }
