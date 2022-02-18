@@ -3,22 +3,29 @@
 #include "pixel.h"
 #include <list>
 
+
 class Image 
 {
-protected:
+private:
 	std::string Source;
-	std::list <pixel> ListPixel;
+	std::list <Pixel>* ListPixel;
 	int Height;
-	int Weight;
+	int Width;
 	RGB DominantColor;
 
 public :
 	Image();
-	Image(std::string ,std::list<pixel>,int,int,RGB);
+	Image(std::string ,std::list<Pixel>*,int,int,RGB);
+	Image(std::string Source);
 
-	Image FindMask();
-	RGB FindDominance();
-	Image CompositionImage();
+
+	//Image FindMask();
+	//RGB FindDominance();
+	//Image CompositionImage();
+	int loadImage(const char* path);
+	int getHeight();
+
+
 
 };
 

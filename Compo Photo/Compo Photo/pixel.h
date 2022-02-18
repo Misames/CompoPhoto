@@ -8,6 +8,7 @@ struct RGB {
 	float A;
 	
 	RGB();
+	RGB(int,int,int,float);
 };
 
 class Pixel
@@ -18,6 +19,7 @@ class Pixel
 
 public :
 	Pixel();
+	Pixel(RGB,int,int);
 
 };
 
