@@ -1,18 +1,10 @@
+#include "image.hpp"
 
-
-
-
-#include "Image.h"
-
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-	Image lena;
-
-
-	lena.Image_load(&lena, "lena.jpg");
-	lena.Image_to_gray(&lena);
-	lena.Image_save(&lena, "lenaGray.jpg");
-	lena.Image_free(&lena);
-	
+    Image lena;
+    lena.load(&lena, "lena.jpg");
+    lena.converToGrey(&lena);
+    lena.save(&lena, "lenaGray.jpg");
+    lena.free(&lena);
 }
-
