@@ -15,7 +15,7 @@ private:
     int channels;
     size_t size;
     uint8_t *data;
-    vector<unsigned char> bufferPix;
+    vector<vector<int>> bufferPix;
 
 public:
     Image();
@@ -34,7 +34,7 @@ public:
     int getHeight() const;
     int getChannels() const;
     size_t getSize() const;
-    vector<unsigned char> getPix() const;
+    vector<vector<int>> getPix() const;
 
     void create(Image *img, int width, int height, int channels);
     void save(string fname);

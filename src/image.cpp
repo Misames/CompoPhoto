@@ -15,28 +15,31 @@ using namespace std;
 
 Image::Image()
 {
-    this->width = 0;
-    this->height = 0;
-    this->channels = 0;
-    this->data = 0;
-    this->size = 0;
+    width = 0;
+    height = 0;
+    channels = 0;
+    data = 0;
+    size = 0;
 }
 
 Image::Image(string src)
 {
-    this->data = stbi_load(src.c_str(), &this->width, &this->height, &this->channels, 0);
-    if (this->data != nullptr)
+    data = stbi_load(src.c_str(), &width, &height, &channels, 0);
+    if (data != nullptr)
     {
-        this->size = (this->width * this->height) * this->channels;
-        this->bufferPix = vector<unsigned char>(this->data, this->data + this->width * this->height * 3);
+        size = (width * height) * channels;
+        //bufferPix = vector<unsigned char>(data, data + width * height * channels);
+        for(unsigned char *p = data; p != data + size; p += channels){
+            bufferPix.push_back(vector<int>{*p,*(p+1),*(p+2)});
+        }
     }
     else
     {
-        this->width = 0;
-        this->height = 0;
-        this->channels = 0;
-        this->data = 0;
-        this->size = 0;
+        width = 0;
+        height = 0;
+        channels = 0;
+        data = 0;
+        size = 0;
     }
 }
 
@@ -46,27 +49,27 @@ Image::Image(string src)
 
 void Image::setData(uint8_t *_data)
 {
-    this->data = _data;
+    data = _data;
 }
 
 void Image::setWidth(int _width)
 {
-    this->width = _width;
+    width = _width;
 }
 
 void Image::setHeight(int _height)
 {
-    this->height = _height;
+    height = _height;
 }
 
 void Image::setChannels(int _channels)
 {
-    this->channels = _channels;
+    channels = _channels;
 }
 
 void Image::setSize(size_t _size)
 {
-    this->size = _size;
+    size = _size;
 }
 
 ///////////
@@ -75,32 +78,32 @@ void Image::setSize(size_t _size)
 
 uint8_t *Image::getData() const
 {
-    return this->data;
+    return data;
 }
 
 int Image::getWidth() const
 {
-    return this->width;
+    return width;
 }
 
 int Image::getHeight() const
 {
-    return this->height;
+    return height;
 }
 
 int Image::getChannels() const
 {
-    return this->channels;
+    return channels;
 }
 
 size_t Image::getSize() const
 {
-    return this->size;
+    return size;
 }
 
-vector<unsigned char> Image::getPix() const
+vector<vector<int>> Image::getPix() const
 {
-    return this->bufferPix;
+    return bufferPix;
 }
 
 void Image::create(Image *img, int width, int height, int channels)
@@ -117,44 +120,44 @@ void Image::create(Image *img, int width, int height, int channels)
 
 void Image::save(string fname)
 {
-    stbi_write_jpg(fname.c_str(), this->width, this->height, this->channels, this->data, 100);
+    stbi_write_jpg(fname.c_str(), width, height, channels, data, 100);
 }
 
 void Image::free()
 {
-    if (this->data != nullptr)
+    if (data != nullptr)
     {
-        stbi_image_free(this->data);
-        this->data = NULL;
-        this->width = 0;
-        this->height = 0;
-        this->channels = 0;
-        this->size = 0;
+        stbi_image_free(data);
+        data = NULL;
+        width = 0;
+        height = 0;
+        channels = 0;
+        size = 0;
     }
 }
 
 void Image::convertToGrey()
 {
-    if (this->channels < 3)
+    if (channels < 3)
         printf("Image déjà en niveau de gris\n");
     else
     {
-        for (int i = 0; i < this->size; i += this->channels)
+        for (int i = 0; i < size; i += channels)
         {
             // On fait la moyenne de la couleur de nos pixels puis on divise par 3 pour obtenir le niv de gris
-            int gray = (this->data[i] + this->data[i + 1] + this->data[i + 2]) / 3;
-            memset(this->data + i, gray, 3);
+            int gray = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            memset(data + i, gray, 3);
         }
     }
 }
 
 void Image::resize(int w, int h)
 {
-    float rotaX = this->width / w;
-    float rotaY = this->height / h;
-    for (int x = 0; x < this->width; x++)
+    float rotaX = width / w;
+    float rotaY = height / h;
+    for (int x = 0; x < width; x++)
     {
-        for (int y = 0; y < this->width; y++)
+        for (int y = 0; y < width; y++)
         {
         }
     }
@@ -162,6 +165,6 @@ void Image::resize(int w, int h)
 
 void Image::merge(Image img)
 {
-    for (int i = 0; i < this->size; i++)
-        this->data[i] += this->data[i];
+    for (int i = 0; i < size; i++)
+        data[i] += data[i];
 }
