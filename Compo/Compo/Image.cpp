@@ -1,5 +1,12 @@
 #include "Image.h"
 
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
+
 void Image::Image_load(Image* img, const char* fname) {
 	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 0)) != NULL) {
 		img->size = (img->width * img->height) * img->channels;

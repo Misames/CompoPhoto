@@ -140,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Compo.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Image.cpp" />
   </ItemGroup>
   <ItemGroup>

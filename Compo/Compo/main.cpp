@@ -1,12 +1,10 @@
 
 
-#include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
+
+
 #include "Image.h"
 
-
-int main()
+int main(int argc, char* argv[])
 {
 	Image lena;
 
