@@ -25,7 +25,12 @@ Image::Image()
 Image::Image(string src)
 {
     this->data = stbi_load(src.c_str(), &this->width, &this->height, &this->channels, 0);
-    if (this->data == nullptr)
+    if (this->data != nullptr)
+    {
+        this->size = (this->width * this->height) * this->channels;
+        this->bufferPix = vector<unsigned char>(this->data, this->data + this->width * this->height * 3);
+    }
+    else
     {
         this->width = 0;
         this->height = 0;
@@ -93,6 +98,11 @@ size_t Image::getSize() const
     return this->size;
 }
 
+vector<unsigned char> Image::getPix() const
+{
+    return this->bufferPix;
+}
+
 void Image::create(Image *img, int width, int height, int channels)
 {
     size_t size = (width * height) * channels;
@@ -140,12 +150,14 @@ void Image::convertToGrey()
 
 void Image::resize(int w, int h)
 {
-    stbir_resize(this->data, w, h, 0,
-                 this->data, this->width, this->height, 0,
-                 STBIR_TYPE_UINT8, this->channels, STBIR_ALPHA_CHANNEL_NONE, 0,
-                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
-                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
-                 STBIR_COLORSPACE_SRGB, nullptr);
+    float rotaX = this->width / w;
+    float rotaY = this->height / h;
+    for (int x = 0; x < this->width; x++)
+    {
+        for (int y = 0; y < this->width; y++)
+        {
+        }
+    }
 }
 
 void Image::merge(Image img)
