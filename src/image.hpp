@@ -16,7 +16,7 @@ private:
     string fileName;
     size_t size;
     uint8_t *data;
-    vector<unsigned int> bufferPix;
+    vector<vector<int>> bufferPix;
 
 public:
     // Constructor
@@ -39,8 +39,7 @@ public:
     int getChannels() const;
     string getSrc() const;
     size_t getSize() const;
-    uint8_t *getData() const;
-    vector<unsigned> getPix() const;
+    vector<vector<int>> getPix() const;
 
     // Method
     void create(Image *img, int width, int height, int channels);
