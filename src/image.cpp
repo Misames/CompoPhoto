@@ -1,22 +1,102 @@
 #include "image.hpp"
 
+using namespace std;
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include <stb_image_resize.h>
 
-void Image::load(Image *img, const char *fname)
+////////////////
+// Constructeur//
+////////////////
+
+Image::Image()
 {
-    if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 0)) != NULL)
-    {
-        img->size = (img->width * img->height) * img->channels;
-    }
+    this->width = 0;
+    this->height = 0;
+    this->channels = 0;
+    this->data = 0;
+    this->size = 0;
+}
+
+Image::Image(string src)
+{
+    this->data = stbi_load(src.c_str(), &this->width, &this->height, &this->channels, 0);
+}
+
+////////////////
+// Destructeur /
+////////////////
+
+Image::~Image()
+{
+    delete[] data;
+}
+
+///////////
+// Setter /
+///////////
+
+void Image::setData(uint8_t *_data)
+{
+    this->data = _data;
+}
+
+void Image::setWidth(int _width)
+{
+    this->width = _width;
+}
+
+void Image::setHeight(int _height)
+{
+    this->height = _height;
+}
+
+void Image::setChannels(int _channels)
+{
+    this->channels = _channels;
+}
+
+void Image::setSize(size_t _size)
+{
+    this->size = _size;
+}
+
+//////////
+// Getter//
+//////////
+
+uint8_t *Image::getData() const
+{
+    return this->data;
+}
+
+int Image::getWidth() const
+{
+    return this->width;
+}
+
+int Image::getHeight() const
+{
+    return this->height;
+}
+
+int Image::getChannels() const
+{
+    return this->channels;
+}
+
+size_t Image::getSize() const
+{
+    return this->size;
 }
 
 void Image::create(Image *img, int width, int height, int channels)
 {
     size_t size = (width * height) * channels;
-
     if (img->data != NULL)
     {
         img->width = width;
@@ -28,13 +108,11 @@ void Image::create(Image *img, int width, int height, int channels)
 
 void Image::save(const Image *img, const char *fname)
 {
-
     stbi_write_jpg(fname, img->width, img->height, img->channels, img->data, 100);
 }
 
 void Image::free(Image *img)
 {
-
     if (img->data != NULL)
     {
         stbi_image_free(img->data);
@@ -46,9 +124,8 @@ void Image::free(Image *img)
     }
 }
 
-void Image::converToGrey(Image *img)
+void Image::convertToGrey(Image *img)
 {
-
     if (img->channels < 3)
     {
         printf("Image d�ja en niveau de gris \n ");
@@ -64,7 +141,20 @@ void Image::converToGrey(Image *img)
     }
 }
 
-void Image::setData(uint8_t *_data)
+void Image::resize(Image *img1, Image *img2)
 {
-    this->data = _data;
+    stbir_resize(img2->data, img2->width, img2->height, 0,
+                 img1->data, img1->width, img1->height, 0,
+                 STBIR_TYPE_UINT8, img2->channels, STBIR_ALPHA_CHANNEL_NONE, 0,
+                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
+                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
+                 STBIR_COLORSPACE_SRGB, nullptr);
+}
+
+void Image::merge(Image *img1, Image *img2)
+{
+    for (int i = 0; i < img1->size; i++)
+    {
+        img1->data[i] += img2->data[i];
+    }
 }
