@@ -54,6 +54,9 @@ void Image::setChannels(int _channels) {
 void Image::setSize(size_t _size) {
 	this->size = _size;
 }
+void Image::setpixtab(std::vector<unsigned char> _pixtab) {
+	this->pixtab = _pixtab;
+}
 
 //////////
 //Getter//
@@ -74,12 +77,21 @@ int Image::getChannels() const {
 size_t Image::getSize() const {
 	return this->size;
 }
-
-
+std::vector<unsigned char> Image::getPixtab() {
+	return this->pixtab;
+}
 
 void Image::Image_load(Image* img, const char* fname) {
-	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 0)) != NULL) {
+	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 4)) != NULL) {
 		img->size = (img->width * img->height) * img->channels;
+		img->pixtab = std::vector<unsigned char>(img->data,img->data + img->width * img->height * 4);
+		/*for (int i = 0; i < img->size; i++) {
+			std::cout << "RGBA pixel "
+				<< static_cast<int>(img->pixtab[i + 0]) << " "
+				<< static_cast<int>(img->pixtab[i + 1]) << " "
+				<< static_cast<int>(img->pixtab[i + 2]) << " "
+				<< static_cast<int>(img->pixtab[i + 3]) << '\n';
+		}*/
 	}
 }
 

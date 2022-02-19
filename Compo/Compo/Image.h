@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <vector>
 
 
 class Image
@@ -14,6 +14,7 @@ private :
 	int channels;
 	size_t size;
 	uint8_t *data;
+	std::vector<unsigned char> pixtab;
 
 public :
 	Image();
@@ -25,6 +26,7 @@ public :
 	void setHeight(int _height);
 	void setChannels(int _channels);
 	void setSize(size_t _size);
+	void setpixtab(std::vector<unsigned char> _pixtab);
 
 	//getter
 	uint8_t* getData() const;
@@ -32,7 +34,7 @@ public :
 	int getHeight() const;
 	int getChannels() const;
 	size_t getSize() const;
-
+	std::vector<unsigned char> getPixtab();
 
 	void Image_load(Image* img, const char* fname);
 	void Image_create(Image * img, int width, int height, int channels);
