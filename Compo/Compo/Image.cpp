@@ -18,6 +18,7 @@ Image::Image() {
 	this->channels = 0;
 	this->data = 0;
 	this->size = 0;
+	this->pixtab = std::vector<unsigned char>(0);
 }
 
 Image::Image(const Image* img) {
@@ -26,14 +27,15 @@ Image::Image(const Image* img) {
 	this->channels = img->channels;
 	this->data = img->data;
 	this->size = img->size;
+	this->pixtab = img->pixtab;
 }
 ///////////////
 //Destructeur//
 ///////////////
 
-Image::~Image() {
+/*Image::~Image() {
 	delete this;
-}
+}*/
 
 //////////
 //Setter//
@@ -82,16 +84,15 @@ std::vector<unsigned char> Image::getPixtab() {
 }
 
 void Image::Image_load(Image* img, const char* fname) {
-	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 4)) != NULL) {
+	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 3)) != NULL) {
 		img->size = (img->width * img->height) * img->channels;
-		img->pixtab = std::vector<unsigned char>(img->data,img->data + img->width * img->height * 4);
-		/*for (int i = 0; i < img->size; i++) {
+		img->pixtab = std::vector<unsigned char>(img->data,img->data + img->width * img->height * 3);
+		for (int i = 0; i < img->size; i++) {
 			std::cout << "RGBA pixel "
 				<< static_cast<int>(img->pixtab[i + 0]) << " "
 				<< static_cast<int>(img->pixtab[i + 1]) << " "
-				<< static_cast<int>(img->pixtab[i + 2]) << " "
-				<< static_cast<int>(img->pixtab[i + 3]) << '\n';
-		}*/
+				<< static_cast<int>(img->pixtab[i + 2]) << '\n';
+		} 
 	}
 }
 

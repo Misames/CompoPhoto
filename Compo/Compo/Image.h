@@ -19,7 +19,7 @@ private :
 public :
 	Image();
 	Image(const Image* img);
-	~Image();
+	//~Image();
 	//setter
 	void setData(uint8_t* _data);
 	void setWidth(int _width);
