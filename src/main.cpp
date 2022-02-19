@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     else
     {
         diretory = "img/";
-        imgOutput = "default.jpg";
+        imgOutput = "out_put.jpg";
         optionProgram = "";
     }
 
@@ -27,8 +27,11 @@ int main(int argc, char *argv[])
     {
         string src = diretory + to_string(i) + ".jpg";
         mesImage.push_back(Image(src));
-        cout << mesImage[i].getPix().size() << endl;
     }
+
+    // Image res = mesImage[0].crop(20, 20, 20, 20);
+    Image res = mesImage[0].resize(500, 500);
+    res.save(imgOutput);
 
     return 0;
 }
