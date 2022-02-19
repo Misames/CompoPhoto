@@ -23,15 +23,15 @@ public:
     Image();
     Image(int, int);
     Image(const Image &);
-    Image(string src);
+    Image(string);
 
     // Setter
-    void setData(uint8_t *_data);
-    void setWidth(int _width);
-    void setHeight(int _height);
-    void setChannels(int _channels);
-    void setSize(size_t _size);
-    void setBufferPix(vector<unsigned int>);
+    void setData(uint8_t *);
+    void setWidth(int);
+    void setHeight(int);
+    void setChannels(int);
+    void setSize(size_t);
+    void setBufferPix(vector<vector<int>>);
 
     // Getter
     int getWidth() const;
@@ -39,11 +39,12 @@ public:
     int getChannels() const;
     string getSrc() const;
     size_t getSize() const;
+    uint8_t *getData() const;
     vector<vector<int>> getPix() const;
 
     // Method
-    void create(Image *img, int width, int height, int channels);
-    void save(string fname);
+    void create(Image *, int, int, int);
+    void save(string);
     void convertToGrey();
     void free();
     void merge(Image);

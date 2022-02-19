@@ -45,9 +45,10 @@ Image::Image(string src)
     if (data != nullptr)
     {
         size = (width * height) * channels;
-        //bufferPix = vector<unsigned char>(data, data + width * height * channels);
-        for(unsigned char *p = data; p != data + size; p += channels){
-            bufferPix.push_back(vector<int>{*p,*(p+1),*(p+2)});
+        // bufferPix = vector<unsigned char>(data, data + width * height * channels);
+        for (unsigned char *p = data; p != data + size; p += channels)
+        {
+            bufferPix.push_back(vector<int>{*p, *(p + 1), *(p + 2)});
         }
     }
     else
@@ -58,6 +59,7 @@ Image::Image(string src)
         this->fileName = "default.jpg";
         this->data = 0;
         this->size = 0;
+        this->bufferPix = {};
     }
 }
 
@@ -65,32 +67,32 @@ Image::Image(string src)
 // Setter /
 ///////////
 
-void Image::setData(uint8_t *_data)
+void Image::setData(uint8_t *data)
 {
-    data = _data;
+    this->data = data;
 }
 
-void Image::setWidth(int _width)
+void Image::setWidth(int w)
 {
-    width = _width;
+    width = w;
 }
 
-void Image::setHeight(int _height)
+void Image::setHeight(int h)
 {
-    height = _height;
+    height = h;
 }
 
-void Image::setChannels(int _channels)
+void Image::setChannels(int channel)
 {
-    channels = _channels;
+    this->channels = channel;
 }
 
-void Image::setSize(size_t _size)
+void Image::setSize(size_t size)
 {
-    size = _size;
+    this->size = size;
 }
 
-void Image::setBufferPix(vector<unsigned int> newBuffer)
+void Image::setBufferPix(vector<vector<int>> newBuffer)
 {
     this->bufferPix = newBuffer;
 }
