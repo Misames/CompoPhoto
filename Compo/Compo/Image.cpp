@@ -87,13 +87,17 @@ void Image::Image_load(Image* img, const char* fname) {
 	if ((img->data = stbi_load(fname, &img->width, &img->height, &img->channels, 3)) != NULL) {
 		img->size = (img->width * img->height) * img->channels;
 		img->pixtab = std::vector<unsigned char>(img->data,img->data + img->width * img->height * 3);
-		for (int i = 0; i < img->size; i++) {
+
+		
+		for (int i = 0; i < img->size  ; i += img->channels) {
 			std::cout << "RGBA pixel "
 				<< static_cast<int>(img->pixtab[i + 0]) << " "
 				<< static_cast<int>(img->pixtab[i + 1]) << " "
 				<< static_cast<int>(img->pixtab[i + 2]) << '\n';
 		} 
 	}
+
+
 }
 
 

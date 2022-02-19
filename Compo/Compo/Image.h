@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
-
+#include "pixel.h"
 
 class Image
 {
