@@ -10,7 +10,7 @@ using namespace std;
 #include <stb_image_resize.h>
 
 ////////////////
-// Constructeur//
+// Constructeur/
 ////////////////
 
 Image::Image()
@@ -25,15 +25,14 @@ Image::Image()
 Image::Image(string src)
 {
     this->data = stbi_load(src.c_str(), &this->width, &this->height, &this->channels, 0);
-}
-
-////////////////
-// Destructeur /
-////////////////
-
-Image::~Image()
-{
-    delete[] data;
+    if (this->data == nullptr)
+    {
+        this->width = 0;
+        this->height = 0;
+        this->channels = 0;
+        this->data = 0;
+        this->size = 0;
+    }
 }
 
 ///////////
@@ -65,9 +64,9 @@ void Image::setSize(size_t _size)
     this->size = _size;
 }
 
-//////////
-// Getter//
-//////////
+///////////
+// Getter /
+///////////
 
 uint8_t *Image::getData() const
 {
@@ -106,55 +105,51 @@ void Image::create(Image *img, int width, int height, int channels)
     }
 }
 
-void Image::save(const Image *img, const char *fname)
+void Image::save(string fname)
 {
-    stbi_write_jpg(fname, img->width, img->height, img->channels, img->data, 100);
+    stbi_write_jpg(fname.c_str(), this->width, this->height, this->channels, this->data, 100);
 }
 
-void Image::free(Image *img)
+void Image::free()
 {
-    if (img->data != NULL)
+    if (this->data != nullptr)
     {
-        stbi_image_free(img->data);
-        img->data = NULL;
-        img->width = 0;
-        img->height = 0;
-        img->channels = 0;
-        img->size = 0;
+        stbi_image_free(this->data);
+        this->data = NULL;
+        this->width = 0;
+        this->height = 0;
+        this->channels = 0;
+        this->size = 0;
     }
 }
 
-void Image::convertToGrey(Image *img)
+void Image::convertToGrey()
 {
-    if (img->channels < 3)
-    {
-        printf("Image d�ja en niveau de gris \n ");
-    }
+    if (this->channels < 3)
+        printf("Image déjà en niveau de gris\n");
     else
     {
-        for (int i = 0; i < img->size; i += img->channels)
+        for (int i = 0; i < this->size; i += this->channels)
         {
             // On fait la moyenne de la couleur de nos pixels puis on divise par 3 pour obtenir le niv de gris
-            int gray = (img->data[i] + img->data[i + 1] + img->data[i + 2]) / 3;
-            memset(img->data + i, gray, 3);
+            int gray = (this->data[i] + this->data[i + 1] + this->data[i + 2]) / 3;
+            memset(this->data + i, gray, 3);
         }
     }
 }
 
-void Image::resize(Image *img1, Image *img2)
+void Image::resize(int w, int h)
 {
-    stbir_resize(img2->data, img2->width, img2->height, 0,
-                 img1->data, img1->width, img1->height, 0,
-                 STBIR_TYPE_UINT8, img2->channels, STBIR_ALPHA_CHANNEL_NONE, 0,
+    stbir_resize(this->data, w, h, 0,
+                 this->data, this->width, this->height, 0,
+                 STBIR_TYPE_UINT8, this->channels, STBIR_ALPHA_CHANNEL_NONE, 0,
                  STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
                  STBIR_FILTER_BOX, STBIR_FILTER_BOX,
                  STBIR_COLORSPACE_SRGB, nullptr);
 }
 
-void Image::merge(Image *img1, Image *img2)
+void Image::merge(Image img)
 {
-    for (int i = 0; i < img1->size; i++)
-    {
-        img1->data[i] += img2->data[i];
-    }
+    for (int i = 0; i < this->size; i++)
+        this->data[i] += this->data[i];
 }

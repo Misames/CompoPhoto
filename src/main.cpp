@@ -17,13 +17,17 @@ int main(int argc, char *argv[])
     }
     else
     {
-        diretory = "/";
+        diretory = "img/";
         imgOutput = "default.jpg";
         optionProgram = "";
     }
 
-    string src = diretory + to_string(0) + ".jpg";
-    Image uneImage = Image(src);
+    // load mes 9 image de img/
+    for (int i = 0; i < 9; i++)
+    {
+        string src = diretory + to_string(i) + ".jpg";
+        mesImage.push_back(Image(src));
+    }
 
     return 0;
 }

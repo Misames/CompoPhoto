@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include <string>
 
 using namespace std;
 
@@ -19,28 +18,25 @@ private:
 public:
     Image();
     Image(string src);
-    ~Image();
 
-    // setter
+    // Setter
     void setData(uint8_t *_data);
     void setWidth(int _width);
     void setHeight(int _height);
     void setChannels(int _channels);
     void setSize(size_t _size);
 
-    // getter
+    // Getter
     uint8_t *getData() const;
     int getWidth() const;
     int getHeight() const;
     int getChannels() const;
     size_t getSize() const;
 
-    void load(Image *img, const char *fname);
     void create(Image *img, int width, int height, int channels);
-    void save(const Image *img, const char *fname);
-    void convertToGrey(Image *img);
-    void free(Image *img);
-
-    void merge(Image *img1, Image *img2);
-    void resize(Image *img1, Image *img2);
+    void save(string fname);
+    void convertToGrey();
+    void free();
+    void merge(Image);
+    void resize(int, int);
 };
