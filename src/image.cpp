@@ -209,7 +209,7 @@ Image Image::merge(Image img)
     return res;
 }
 
-Image Image::resize(int w, int h)
+void Image::resize(int w, int h)
 {
     Image res = Image(w, h);
     res.setBufferPix(this->getPix());				 					 	   	  
@@ -223,8 +223,6 @@ Image Image::resize(int w, int h)
             res.bufferPix[x + y * width] = this->bufferPix[(int)(x * sx + y * sy)];
         }
     }
-
-    return res;
 }
 
 Image Image::crop(int top, int left, int bottom, int right)
