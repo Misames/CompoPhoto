@@ -1,0 +1,10 @@
+﻿  image.cpp
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(165,27): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(177,23): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(185,17): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(186,17): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(194,70): warning C4244: 'argument' : conversion de 'float' en 'const unsigned int', perte possible de données
+C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Compo\image.cpp(217,31): warning C4018: '<' : incompatibilité signed/unsigned
+  main.cpp
+  Génération de code en cours...
+  Compo.vcxproj -> C:\Users\33783\Documents\4A3DJV\CompoPhoto\Compo\Debug\Compo.exe
