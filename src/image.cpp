@@ -8,6 +8,8 @@ using namespace std;
 #include <stb_image_write.h>
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize.h>
+#include <algorithm>
+
 
 /////////////////
 // Constructeur /
@@ -117,6 +119,11 @@ void Image::setBufferPix(Pixel* newBuffer)
         
     saveToData();
     
+}
+
+void Image::setPixel(int x, int y, Pixel p){
+
+    bufferPix[x+y*width] = p;
 }
 
 ///////////
@@ -230,4 +237,39 @@ Image Image::crop(int top, int left, int bottom, int right)
     Image res = Image(*this);
     // algo de crop sur image copier
     return res;
+}
+
+Image Image::backgroundMask(vector<Image> tabIm){
+					 					 	   	  
+
+    Image res = Image(tabIm[0]);
+
+    int l = tabIm.size();
+    int med = l/2;	
+    int w = tabIm[0].getWidth();
+    int h = tabIm[0].getHeight();
+
+    for (int x = 0; x < w;x++)
+    {
+        for (int y = 0; y < h; y++)
+        {		
+            int r[l];
+            int g[l];
+            int b[l];			 					 	   	  
+
+            for(int i =0; i<l;i++){
+                r[i] = tabIm[i].getPix()[x+y*w].r;
+                g[i] = tabIm[i].getPix()[x+y*w].g;
+                b[i] = tabIm[i].getPix()[x+y*w].b;
+
+            }
+
+            sort(r,r+l);
+            sort(g,g+l);
+            sort(b,b+l);
+            res.setPixel(x,y,Pixel(r[med],g[med],b[med]));
+        }
+    }
+
+    return res;				 					 	   	  
 }

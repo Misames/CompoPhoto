@@ -34,6 +34,7 @@ public:
     void setChannels(int);
     void setSize(size_t);
     void setBufferPix(Pixel*);
+    void setPixel(int, int, Pixel);
 
     // Getter
     int getWidth() const;
@@ -51,4 +52,5 @@ public:
     Image merge(Image);
     void resize(int, int);
     Image crop(int, int, int, int);
+    static Image backgroundMask(vector<Image>);
 };

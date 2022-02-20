@@ -34,5 +34,8 @@ int main(int argc, char *argv[])
     Image greyLena(Lena);
     greyLena.castToGrey();
     greyLena.print("grey.jpg");
+
+    Image background = Image::backgroundMask(mesImage);
+    background.print("back.jpg");
     return 0;
 }
