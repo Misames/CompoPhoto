@@ -49,6 +49,6 @@ public:
     void free();
     void castToGrey();
     Image merge(Image);
-    Image resize(int, int);
+    void resize(int, int);
     Image crop(int, int, int, int);
 };
