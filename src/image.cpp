@@ -24,13 +24,15 @@ Image::Image()
 
 Image::Image(string src)
 {
+    cout<<src<<endl;
     data = stbi_load(src.c_str(), &width, &height, &channels, 0);
     if (data != nullptr)
     {
         size = (width * height) * channels;
-        //bufferPix = vector<unsigned char>(data, data + width * height * channels);
-        for(unsigned char *p = data; p != data + size; p += channels){
-            bufferPix.push_back(vector<int>{*p,*(p+1),*(p+2)});
+        bufferPix.reserve(size);
+        
+        for(int i = 0; i<size; i += channels){
+            bufferPix.push_back({*(data+i),*(data+i+1),*(data+i+2)});
         }
     }
     else

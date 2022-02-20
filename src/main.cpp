@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     {
         string src = diretory + to_string(i) + ".jpg";
         mesImage.push_back(Image(src));
-        cout << mesImage[i].getPix().size() << endl;
+        //cout << mesImage[i].getPix().size() << endl;
     }
 
     return 0;
