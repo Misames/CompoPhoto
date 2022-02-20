@@ -1,5 +1,5 @@
 #include "image.hpp"
-
+#include <algorithm>
 using namespace std;
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -210,15 +210,29 @@ Image Image::createMask(vector<Image> images) {
 
     for (int i = 0; i < res.width; i+= res.channels) {
         for (int j = 0; j < res.height; j+= res.channels) {
-            vector<int> R;
-            vector<int> G;
-            vector<int> B;
+            vector<int> Rvec;
+            vector<int> Gvec;
+            vector<int> Bvec;
 
             for (int k = 0; k < images.size(); k++) {
                 Image tmp = images[k];
+                int r, g, b;
+                r = tmp.data[i + j * tmp.height];
+                g= tmp.data[(i + j * tmp.height)+1];
+                b= tmp.data[(i + j * tmp.height)+2];
 
+                Rvec.push_back(r);
+                Gvec.push_back(g);
+                Bvec.push_back(b);
             }
 
+            sort(Rvec.begin(), Rvec.end());
+            sort(Gvec.begin(), Gvec.end());
+            sort(Bvec.begin(), Bvec.end());
+
+            res.data[i + j * res.height] = (int)Rvec[sizeof(Rvec) / 2];
+            res.data[(i + j * res.height)+1] = (int)Gvec[sizeof(Gvec) / 2];
+            res.data[(i + j * res.height)+2] = (int)Bvec[sizeof(Bvec) / 2];
         }
     }
     return res;
