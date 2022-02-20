@@ -22,13 +22,9 @@ int main(int argc, char *argv[])
         optionProgram = "";
     }
 
-    // load mes 9 image de img/
-    for (int i = 0; i < 9; i++)
-    {
-        string src = diretory + to_string(i) + ".jpg";
-        mesImage.push_back(Image(src));
-        //cout << mesImage[i].getPix().size() << endl;
-    }
+    Image monImage(string("img/0.jpg"));
+    monImage.resize(700, 300);
+    monImage.print(imgOutput);
 
     return 0;
 }

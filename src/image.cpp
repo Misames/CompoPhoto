@@ -15,52 +15,50 @@ using namespace std;
 
 Image::Image()
 {
-    this->width = 0;
-    this->height = 0;
-    this->channels = 0;
-    this->fileName = "default.jpg";
-    this->size = 0;
-    this->data = 0;
-    this->bufferPix = {};
+    width = 0;
+    height = 0;
+    channels = 0;
+    fileName = "default.jpg";
+    size = 0;
+    data = 0;
+    bufferPix = {};
+}
+
+Image::Image(int w, int h)
+{
+    width = w;
+    height = h;
+    channels = 3;
+    fileName = "default.jpg";
+    size = w * h * 3;
+    data = 0;
+    bufferPix = {};
 }
 
 Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getPix())
 {
 }
 
-Image::Image(int w, int h)
-{
-    this->width = w;
-    this->height = h;
-    this->channels = 3;
-    this->fileName = "default.jpg";
-    this->size = w * h * 3;
-    this->data = 0;
-    this->bufferPix = {};
-}
-
 Image::Image(string src)
 {
-    cout<<src<<endl;
     data = stbi_load(src.c_str(), &width, &height, &channels, 0);
     if (data != nullptr)
     {
+        fileName = src;
         size = (width * height) * channels;
         bufferPix.reserve(size);
-        
-        for(int i = 0; i<size; i += channels){
-            bufferPix.push_back({*(data+i),*(data+i+1),*(data+i+2)});
-        }
+        for (int i = 0; i < size; i += channels)
+            bufferPix.push_back({*(data + i), *(data + i + 1), *(data + i + 2)});
     }
     else
     {
-        this->width = 0;
-        this->height = 0;
-        this->channels = 0;
-        this->fileName = "default.jpg";
-        this->data = 0;
-        this->size = 0;
-        this->bufferPix = {};
+        width = 0;
+        height = 0;
+        channels = 0;
+        fileName = "default.jpg";
+        data = 0;
+        size = 0;
+        bufferPix = {};
     }
 }
 
@@ -182,23 +180,16 @@ Image Image::merge(Image img)
     return res;
 }
 
-Image Image::resize(int w, int h)
+void Image::resize(int w, int h)
 {
-    Image res = Image(w, h);
-    float rotaX = this->width / w;
-    float rotaY = this->height / h;
-    res.setBufferPix(this->getPix());
-    res.setData(this->getData());
-
-    for (int x = 0; x < this->width; x++)
-    {
-        for (int y = 0; y < this->height; y++)
-        {
-            res.bufferPix[x + y * width] = this->bufferPix[x * rotaX + y * rotaY];
-        }
-    }
-
-    return res;
+    stbir_resize(data, width, height, 0, data, w, h, 0,
+                 STBIR_TYPE_UINT8, channels,
+                 STBIR_ALPHA_CHANNEL_NONE, 0,
+                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
+                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
+                 STBIR_COLORSPACE_SRGB, nullptr);
+    setHeight(h);
+    setWidth(w);
 }
 
 Image Image::crop(int top, int left, int bottom, int right)
