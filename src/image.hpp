@@ -13,33 +13,40 @@ private:
     int width;
     int height;
     int channels;
+    string fileName;
     size_t size;
     uint8_t *data;
     vector<vector<int>> bufferPix;
 
 public:
+    // Constructor
     Image();
-    Image(string src);
+    Image(int, int);
+    Image(const Image &);
+    Image(string);
 
     // Setter
-    void setData(uint8_t *_data);
-    void setWidth(int _width);
-    void setHeight(int _height);
-    void setChannels(int _channels);
-    void setSize(size_t _size);
+    void setData(uint8_t *);
+    void setWidth(int);
+    void setHeight(int);
+    void setChannels(int);
+    void setSize(size_t);
+    void setBufferPix(vector<vector<int>>);
 
     // Getter
-    uint8_t *getData() const;
     int getWidth() const;
     int getHeight() const;
     int getChannels() const;
+    string getFileName() const;
     size_t getSize() const;
+    uint8_t *getData() const;
     vector<vector<int>> getPix() const;
 
-    void create(Image *img, int width, int height, int channels);
-    void save(string fname);
-    void convertToGrey();
+    // Method
+    void print(string);
     void free();
-    void merge(Image);
-    void resize(int, int);
+    void castToGrey();
+    Image merge(Image);
+    Image resize(int, int);
+    Image crop(int, int, int, int);
 };

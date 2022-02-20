@@ -9,17 +9,34 @@ using namespace std;
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize.h>
 
-////////////////
-// Constructeur/
-////////////////
+/////////////////
+// Constructeur /
+/////////////////
 
 Image::Image()
 {
-    width = 0;
-    height = 0;
-    channels = 0;
-    data = 0;
-    size = 0;
+    this->width = 0;
+    this->height = 0;
+    this->channels = 0;
+    this->fileName = "default.jpg";
+    this->size = 0;
+    this->data = 0;
+    this->bufferPix = {};
+}
+
+Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getPix())
+{
+}
+
+Image::Image(int w, int h)
+{
+    this->width = w;
+    this->height = h;
+    this->channels = 3;
+    this->fileName = "default.jpg";
+    this->size = w * h * 3;
+    this->data = 0;
+    this->bufferPix = {};
 }
 
 Image::Image(string src)
@@ -37,11 +54,13 @@ Image::Image(string src)
     }
     else
     {
-        width = 0;
-        height = 0;
-        channels = 0;
-        data = 0;
-        size = 0;
+        this->width = 0;
+        this->height = 0;
+        this->channels = 0;
+        this->fileName = "default.jpg";
+        this->data = 0;
+        this->size = 0;
+        this->bufferPix = {};
     }
 }
 
@@ -49,39 +68,39 @@ Image::Image(string src)
 // Setter /
 ///////////
 
-void Image::setData(uint8_t *_data)
+void Image::setData(uint8_t *data)
 {
-    data = _data;
+    this->data = data;
 }
 
-void Image::setWidth(int _width)
+void Image::setWidth(int w)
 {
-    width = _width;
+    width = w;
 }
 
-void Image::setHeight(int _height)
+void Image::setHeight(int h)
 {
-    height = _height;
+    height = h;
 }
 
-void Image::setChannels(int _channels)
+void Image::setChannels(int channel)
 {
-    channels = _channels;
+    this->channels = channel;
 }
 
-void Image::setSize(size_t _size)
+void Image::setSize(size_t size)
 {
-    size = _size;
+    this->size = size;
+}
+
+void Image::setBufferPix(vector<vector<int>> newBuffer)
+{
+    this->bufferPix = newBuffer;
 }
 
 ///////////
 // Getter /
 ///////////
-
-uint8_t *Image::getData() const
-{
-    return data;
-}
 
 int Image::getWidth() const
 {
@@ -98,9 +117,19 @@ int Image::getChannels() const
     return channels;
 }
 
+string Image::getFileName() const
+{
+    return this->fileName;
+}
+
 size_t Image::getSize() const
 {
     return size;
+}
+
+uint8_t *Image::getData() const
+{
+    return data;
 }
 
 vector<vector<int>> Image::getPix() const
@@ -108,19 +137,11 @@ vector<vector<int>> Image::getPix() const
     return bufferPix;
 }
 
-void Image::create(Image *img, int width, int height, int channels)
-{
-    size_t size = (width * height) * channels;
-    if (img->data != NULL)
-    {
-        img->width = width;
-        img->height = height;
-        img->channels = channels;
-        img->size = size;
-    }
-}
+////////////
+// Methode /
+////////////
 
-void Image::save(string fname)
+void Image::print(string fname)
 {
     stbi_write_jpg(fname.c_str(), width, height, channels, data, 100);
 }
@@ -138,7 +159,7 @@ void Image::free()
     }
 }
 
-void Image::convertToGrey()
+void Image::castToGrey()
 {
     if (channels < 3)
         printf("Image déjà en niveau de gris\n");
@@ -153,20 +174,36 @@ void Image::convertToGrey()
     }
 }
 
-void Image::resize(int w, int h)
+Image Image::merge(Image img)
 {
-    float rotaX = width / w;
-    float rotaY = height / h;
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < width; y++)
-        {
-        }
-    }
-}
-
-void Image::merge(Image img)
-{
+    Image res = Image(*this);
     for (int i = 0; i < size; i++)
         data[i] += data[i];
+    return res;
+}
+
+Image Image::resize(int w, int h)
+{
+    Image res = Image(w, h);
+    float rotaX = this->width / w;
+    float rotaY = this->height / h;
+    res.setBufferPix(this->getPix());
+    res.setData(this->getData());
+
+    for (int x = 0; x < this->width; x++)
+    {
+        for (int y = 0; y < this->height; y++)
+        {
+            res.bufferPix[x + y * width] = this->bufferPix[x * rotaX + y * rotaY];
+        }
+    }
+
+    return res;
+}
+
+Image Image::crop(int top, int left, int bottom, int right)
+{
+    Image res = Image(*this);
+    // algo de crop sur image copier
+    return res;
 }

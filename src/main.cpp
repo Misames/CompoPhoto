@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     else
     {
         diretory = "img/";
-        imgOutput = "default.jpg";
+        imgOutput = "out_put.jpg";
         optionProgram = "";
     }
 
