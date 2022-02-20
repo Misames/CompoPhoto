@@ -29,9 +29,5 @@ int main(int argc, char *argv[])
         mesImage.push_back(Image(src));
     }
 
-    // Image res = mesImage[0].crop(20, 20, 20, 20);
-    Image res = mesImage[0].resize(500, 500);
-    res.save(imgOutput);
-
     return 0;
 }

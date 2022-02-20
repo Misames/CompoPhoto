@@ -37,17 +37,16 @@ public:
     int getWidth() const;
     int getHeight() const;
     int getChannels() const;
-    string getSrc() const;
+    string getFileName() const;
     size_t getSize() const;
     uint8_t *getData() const;
     vector<vector<int>> getPix() const;
 
     // Method
-    void create(Image *, int, int, int);
-    void save(string);
-    void convertToGrey();
+    void print(string);
     void free();
-    void merge(Image);
+    void castToGrey();
+    Image merge(Image);
     Image resize(int, int);
     Image crop(int, int, int, int);
 };

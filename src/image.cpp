@@ -9,9 +9,9 @@ using namespace std;
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize.h>
 
-////////////////
-// Constructeur/
-////////////////
+/////////////////
+// Constructeur /
+/////////////////
 
 Image::Image()
 {
@@ -24,7 +24,7 @@ Image::Image()
     this->bufferPix = {};
 }
 
-Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getSrc()), bufferPix(cpy.getPix())
+Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getPix())
 {
 }
 
@@ -41,15 +41,13 @@ Image::Image(int w, int h)
 
 Image::Image(string src)
 {
-    data = stbi_load(src.c_str(), &width, &height, &channels, 0);
+    this->data = stbi_load(src.c_str(), &width, &height, &channels, 0);
     if (data != nullptr)
     {
-        size = (width * height) * channels;
-        // bufferPix = vector<unsigned char>(data, data + width * height * channels);
+        this->fileName = src;
+        this->size = this->width * this->height - this->channels;
         for (unsigned char *p = data; p != data + size; p += channels)
-        {
             bufferPix.push_back(vector<int>{*p, *(p + 1), *(p + 2)});
-        }
     }
     else
     {
@@ -101,11 +99,6 @@ void Image::setBufferPix(vector<vector<int>> newBuffer)
 // Getter /
 ///////////
 
-uint8_t *Image::getData() const
-{
-    return data;
-}
-
 int Image::getWidth() const
 {
     return width;
@@ -121,9 +114,19 @@ int Image::getChannels() const
     return channels;
 }
 
+string Image::getFileName() const
+{
+    return this->fileName;
+}
+
 size_t Image::getSize() const
 {
     return size;
+}
+
+uint8_t *Image::getData() const
+{
+    return data;
 }
 
 vector<vector<int>> Image::getPix() const
@@ -131,24 +134,11 @@ vector<vector<int>> Image::getPix() const
     return bufferPix;
 }
 
-string Image::getSrc() const
-{
-    return this->fileName;
-}
+////////////
+// Methode /
+////////////
 
-void Image::create(Image *img, int width, int height, int channels)
-{
-    size_t size = (width * height) * channels;
-    if (img->data != NULL)
-    {
-        img->width = width;
-        img->height = height;
-        img->channels = channels;
-        img->size = size;
-    }
-}
-
-void Image::save(string fname)
+void Image::print(string fname)
 {
     stbi_write_jpg(fname.c_str(), width, height, channels, data, 100);
 }
@@ -166,7 +156,7 @@ void Image::free()
     }
 }
 
-void Image::convertToGrey()
+void Image::castToGrey()
 {
     if (channels < 3)
         printf("Image déjà en niveau de gris\n");
@@ -179,6 +169,14 @@ void Image::convertToGrey()
             memset(data + i, gray, 3);
         }
     }
+}
+
+Image Image::merge(Image img)
+{
+    Image res = Image(*this);
+    for (int i = 0; i < size; i++)
+        data[i] += data[i];
+    return res;
 }
 
 Image Image::resize(int w, int h)
@@ -198,12 +196,6 @@ Image Image::resize(int w, int h)
     }
 
     return res;
-}
-
-void Image::merge(Image img)
-{
-    for (int i = 0; i < size; i++)
-        data[i] += data[i];
 }
 
 Image Image::crop(int top, int left, int bottom, int right)
