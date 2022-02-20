@@ -21,11 +21,15 @@ Image::Image()
     this->fileName = "default.jpg";
     this->size = 0;
     this->data = 0;
-    this->bufferPix = {};
+    this->bufferPix = new Pixel[0];
 }
 
-Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getPix())
+Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName())
 {
+    bufferPix = new Pixel[cpy.width*cpy.height];
+    for (int i = 0; i<cpy.width*cpy.height;i++){
+        bufferPix[i] = cpy.bufferPix[i];
+    }
 }
 
 Image::Image(int w, int h)
@@ -36,7 +40,7 @@ Image::Image(int w, int h)
     this->fileName = "default.jpg";
     this->size = w * h * 3;
     this->data = 0;
-    this->bufferPix = {};
+    this->bufferPix;
 }
 
 Image::Image(string src)
@@ -46,10 +50,9 @@ Image::Image(string src)
     if (data != nullptr)
     {
         size = (width * height) * channels;
-        bufferPix.reserve(size);
-        
-        for(int i = 0; i<size; i += channels){
-            bufferPix.push_back({*(data+i),*(data+i+1),*(data+i+2)});
+        bufferPix = new Pixel[width*height];
+        for(int i = 0; i<width*height; i++){
+            bufferPix[i].setPixel(*(data+i*3),*(data+i*3+1),*(data+i*3+2));
         }
     }
     else
@@ -60,7 +63,7 @@ Image::Image(string src)
         this->fileName = "default.jpg";
         this->data = 0;
         this->size = 0;
-        this->bufferPix = {};
+        this->bufferPix;
     }
 }
 
@@ -71,6 +74,15 @@ Image::Image(string src)
 void Image::setData(uint8_t *data)
 {
     this->data = data;
+}
+
+void Image::saveToData()
+{
+    for(int i = 0;i< width*height;i++){
+        *(data+i*3) = (unsigned int) bufferPix[i].r;
+        *(data+i*3 + 1) = (unsigned int) bufferPix[i].g;
+        *(data+i*3 + 2) = (unsigned int) bufferPix[i].b;
+    }
 }
 
 void Image::setWidth(int w)
@@ -93,9 +105,18 @@ void Image::setSize(size_t size)
     this->size = size;
 }
 
-void Image::setBufferPix(vector<vector<int>> newBuffer)
+void Image::setBufferPix(Pixel* newBuffer)
 {
-    this->bufferPix = newBuffer;
+
+    int s = (sizeof(newBuffer)/sizeof(*newBuffer));
+    delete [] bufferPix;
+    Pixel* bufferPix = new Pixel[size];
+    for (int i = 0;i<size;i++){
+        bufferPix[i] = newBuffer[i];
+    }
+        
+    saveToData();
+    
 }
 
 ///////////
@@ -132,8 +153,9 @@ uint8_t *Image::getData() const
     return data;
 }
 
-vector<vector<int>> Image::getPix() const
+Pixel* Image::getPix() const
 {
+
     return bufferPix;
 }
 
@@ -143,7 +165,8 @@ vector<vector<int>> Image::getPix() const
 
 void Image::print(string fname)
 {
-    stbi_write_jpg(fname.c_str(), width, height, channels, data, 100);
+    saveToData();
+    stbi_write_jpg(fname.c_str(), width, height, channels, data , width * channels);
 }
 
 void Image::free()
@@ -156,6 +179,7 @@ void Image::free()
         height = 0;
         channels = 0;
         size = 0;
+        delete [] bufferPix;
     }
 }
 
@@ -165,14 +189,17 @@ void Image::castToGrey()
         printf("Image déjà en niveau de gris\n");
     else
     {
-        for (int i = 0; i < size; i += channels)
+        for (int i = 0; i < width*height; i++)
         {
             // On fait la moyenne de la couleur de nos pixels puis on divise par 3 pour obtenir le niv de gris
-            int gray = (data[i] + data[i + 1] + data[i + 2]) / 3;
-            memset(data + i, gray, 3);
+            int gray = (bufferPix[i].r + bufferPix[i].g + bufferPix[i].b) / 3;
+            bufferPix[i].r = gray;
+            bufferPix[i].g = gray;
+            bufferPix[i].b = gray;
         }
     }
 }
+
 
 Image Image::merge(Image img)
 {
@@ -185,16 +212,15 @@ Image Image::merge(Image img)
 Image Image::resize(int w, int h)
 {
     Image res = Image(w, h);
-    float rotaX = this->width / w;
-    float rotaY = this->height / h;
-    res.setBufferPix(this->getPix());
-    res.setData(this->getData());
+    res.setBufferPix(this->getPix());				 					 	   	  
 
+    float sx = width/w;					 					 	   	  
+    float sy = height/h;				 					 	   	  
     for (int x = 0; x < this->width; x++)
     {
         for (int y = 0; y < this->height; y++)
         {
-            res.bufferPix[x + y * width] = this->bufferPix[x * rotaX + y * rotaY];
+            res.bufferPix[x + y * width] = this->bufferPix[(int)(x * sx + y * sy)];
         }
     }
 

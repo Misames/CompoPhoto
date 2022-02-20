@@ -30,5 +30,9 @@ int main(int argc, char *argv[])
         //cout << mesImage[i].getPix().size() << endl;
     }
 
+    Image Lena("lena.jpg");
+    Image greyLena(Lena);
+    greyLena.castToGrey();
+    greyLena.print("grey.jpg");
     return 0;
 }

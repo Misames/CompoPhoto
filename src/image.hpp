@@ -4,6 +4,7 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include "pixel.hpp"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ private:
     string fileName;
     size_t size;
     uint8_t *data;
-    vector<vector<int>> bufferPix;
+    Pixel* bufferPix;
 
 public:
     // Constructor
@@ -27,11 +28,12 @@ public:
 
     // Setter
     void setData(uint8_t *);
+    void saveToData();
     void setWidth(int);
     void setHeight(int);
     void setChannels(int);
     void setSize(size_t);
-    void setBufferPix(vector<vector<int>>);
+    void setBufferPix(Pixel*);
 
     // Getter
     int getWidth() const;
@@ -40,7 +42,7 @@ public:
     string getFileName() const;
     size_t getSize() const;
     uint8_t *getData() const;
-    vector<vector<int>> getPix() const;
+    Pixel* getPix() const;
 
     // Method
     void print(string);
