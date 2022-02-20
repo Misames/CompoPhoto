@@ -9,6 +9,13 @@ using namespace std;
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include <stb_image_resize.h>
 
+Image::~Image()
+{
+    if (data != nullptr)
+        stbi_image_free(data);
+    bufferPix.clear();
+}
+
 /////////////////
 // Constructeur /
 /////////////////
@@ -144,19 +151,6 @@ void Image::print(string fname)
     stbi_write_jpg(fname.c_str(), width, height, channels, data, 100);
 }
 
-void Image::free()
-{
-    if (data != nullptr)
-    {
-        stbi_image_free(data);
-        data = NULL;
-        width = 0;
-        height = 0;
-        channels = 0;
-        size = 0;
-    }
-}
-
 void Image::castToGrey()
 {
     if (channels < 3)
@@ -172,6 +166,21 @@ void Image::castToGrey()
     }
 }
 
+void Image::resize(int w, int h)
+{
+    auto *odata = (unsigned char *)malloc(w * h * channels);
+    stbir_resize(this->data, this->width, this->height, 0, odata, w, h, 0,
+                 STBIR_TYPE_UINT8, channels,
+                 STBIR_ALPHA_CHANNEL_NONE, 0,
+                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
+                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
+                 STBIR_COLORSPACE_SRGB, nullptr);
+    setHeight(h);
+    setWidth(w);
+    setSize(w * h * channels);
+    setData(odata);
+}
+
 Image Image::merge(Image img)
 {
     Image res = Image(*this);
@@ -180,21 +189,46 @@ Image Image::merge(Image img)
     return res;
 }
 
-void Image::resize(int w, int h)
-{
-    stbir_resize(data, width, height, 0, data, w, h, 0,
-                 STBIR_TYPE_UINT8, channels,
-                 STBIR_ALPHA_CHANNEL_NONE, 0,
-                 STBIR_EDGE_CLAMP, STBIR_EDGE_CLAMP,
-                 STBIR_FILTER_BOX, STBIR_FILTER_BOX,
-                 STBIR_COLORSPACE_SRGB, nullptr);
-    setHeight(h);
-    setWidth(w);
-}
-
 Image Image::crop(int top, int left, int bottom, int right)
 {
     Image res = Image(*this);
     // algo de crop sur image copier
+    return res;
+}
+
+Image Image::createMask(vector<Image> images)
+{
+    Image res = Image(this->width, this->height);
+
+    for (int i = 0; i < res.width; i += res.channels)
+    {
+        for (int j = 0; j < res.height; j += res.channels)
+        {
+            vector<int> Rvec;
+            vector<int> Gvec;
+            vector<int> Bvec;
+
+            for (int k = 0; k < images.size(); k++)
+            {
+                Image tmp = images[k];
+                int r, g, b;
+                r = tmp.data[i + j * tmp.height];
+                g = tmp.data[(i + j * tmp.height) + 1];
+                b = tmp.data[(i + j * tmp.height) + 2];
+
+                Rvec.push_back(r);
+                Gvec.push_back(g);
+                Bvec.push_back(b);
+            }
+
+            sort(Rvec.begin(), Rvec.end());
+            sort(Gvec.begin(), Gvec.end());
+            sort(Bvec.begin(), Bvec.end());
+
+            res.data[i + j * res.height] = (int)Rvec[sizeof(Rvec) / 2];
+            res.data[(i + j * res.height) + 1] = (int)Gvec[sizeof(Gvec) / 2];
+            res.data[(i + j * res.height) + 2] = (int)Bvec[sizeof(Bvec) / 2];
+        }
+    }
     return res;
 }

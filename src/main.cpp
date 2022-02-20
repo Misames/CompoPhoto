@@ -1,8 +1,19 @@
 #include "image.hpp"
 #include <string>
 #include <vector>
+#include <filesystem>
 
 using namespace std;
+using namespace filesystem;
+
+enum options
+{
+    VERBOSE = 0,
+    FADING = 1,
+    OVERLAP = 2,
+    STEP = 3,
+    DISTANCE = 4
+};
 
 int main(int argc, char *argv[])
 {
@@ -22,9 +33,13 @@ int main(int argc, char *argv[])
         optionProgram = "";
     }
 
-    Image monImage(string("img/0.jpg"));
-    monImage.resize(700, 300);
-    monImage.print(imgOutput);
+    for (uint8_t i = 0; i < 9; i++)
+    {
+        Image img = Image(diretory + to_string(i) + ".jpg");
+        img.resize(700, 300);
+        img.castToGrey();
+        img.print(to_string(i) + imgOutput);
+    }
 
     return 0;
 }
