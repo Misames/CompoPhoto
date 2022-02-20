@@ -4533,7 +4533,7 @@ typedef void (APIENTRYP PFNGLGETHISTOGRAMPARAMETERXVOESPROC) (GLenum target, GLe
 typedef void (APIENTRYP PFNGLGETLIGHTXOESPROC) (GLenum light, GLenum pname, GLfixed *params);
 typedef void (APIENTRYP PFNGLGETMAPXVOESPROC) (GLenum target, GLenum query, GLfixed *v);
 typedef void (APIENTRYP PFNGLGETMATERIALXOESPROC) (GLenum face, GLenum pname, GLfixed param);
-typedef void (APIENTRYP PFNGLGETPIXELMAPXVPROC) (GLenum map, GLint size, GLfixed *values);
+typedef void (APIENTRYP PFNGLgetBufferPixELMAPXVPROC) (GLenum map, GLint size, GLfixed *values);
 typedef void (APIENTRYP PFNGLGETTEXGENXVOESPROC) (GLenum coord, GLenum pname, GLfixed *params);
 typedef void (APIENTRYP PFNGLGETTEXLEVELPARAMETERXVOESPROC) (GLenum target, GLint level, GLenum pname, GLfixed *params);
 typedef void (APIENTRYP PFNGLINDEXXOESPROC) (GLfixed component);
@@ -4638,7 +4638,7 @@ GLAPI void APIENTRY glGetHistogramParameterxvOES (GLenum target, GLenum pname, G
 GLAPI void APIENTRY glGetLightxOES (GLenum light, GLenum pname, GLfixed *params);
 GLAPI void APIENTRY glGetMapxvOES (GLenum target, GLenum query, GLfixed *v);
 GLAPI void APIENTRY glGetMaterialxOES (GLenum face, GLenum pname, GLfixed param);
-GLAPI void APIENTRY glGetPixelMapxv (GLenum map, GLint size, GLfixed *values);
+GLAPI void APIENTRY glgetBufferPixelMapxv (GLenum map, GLint size, GLfixed *values);
 GLAPI void APIENTRY glGetTexGenxvOES (GLenum coord, GLenum pname, GLfixed *params);
 GLAPI void APIENTRY glGetTexLevelParameterxvOES (GLenum target, GLint level, GLenum pname, GLfixed *params);
 GLAPI void APIENTRY glIndexxOES (GLfixed component);
@@ -6955,15 +6955,15 @@ typedef void (APIENTRYP PFNGLPIXELTRANSFORMPARAMETERIEXTPROC) (GLenum target, GL
 typedef void (APIENTRYP PFNGLPIXELTRANSFORMPARAMETERFEXTPROC) (GLenum target, GLenum pname, GLfloat param);
 typedef void (APIENTRYP PFNGLPIXELTRANSFORMPARAMETERIVEXTPROC) (GLenum target, GLenum pname, const GLint *params);
 typedef void (APIENTRYP PFNGLPIXELTRANSFORMPARAMETERFVEXTPROC) (GLenum target, GLenum pname, const GLfloat *params);
-typedef void (APIENTRYP PFNGLGETPIXELTRANSFORMPARAMETERIVEXTPROC) (GLenum target, GLenum pname, GLint *params);
-typedef void (APIENTRYP PFNGLGETPIXELTRANSFORMPARAMETERFVEXTPROC) (GLenum target, GLenum pname, GLfloat *params);
+typedef void (APIENTRYP PFNGLgetBufferPixELTRANSFORMPARAMETERIVEXTPROC) (GLenum target, GLenum pname, GLint *params);
+typedef void (APIENTRYP PFNGLgetBufferPixELTRANSFORMPARAMETERFVEXTPROC) (GLenum target, GLenum pname, GLfloat *params);
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glPixelTransformParameteriEXT (GLenum target, GLenum pname, GLint param);
 GLAPI void APIENTRY glPixelTransformParameterfEXT (GLenum target, GLenum pname, GLfloat param);
 GLAPI void APIENTRY glPixelTransformParameterivEXT (GLenum target, GLenum pname, const GLint *params);
 GLAPI void APIENTRY glPixelTransformParameterfvEXT (GLenum target, GLenum pname, const GLfloat *params);
-GLAPI void APIENTRY glGetPixelTransformParameterivEXT (GLenum target, GLenum pname, GLint *params);
-GLAPI void APIENTRY glGetPixelTransformParameterfvEXT (GLenum target, GLenum pname, GLfloat *params);
+GLAPI void APIENTRY glgetBufferPixelTransformParameterivEXT (GLenum target, GLenum pname, GLint *params);
+GLAPI void APIENTRY glgetBufferPixelTransformParameterfvEXT (GLenum target, GLenum pname, GLfloat *params);
 #endif
 #endif /* GL_EXT_pixel_transform */
 
@@ -10342,15 +10342,15 @@ typedef void (APIENTRYP PFNGLPIXELTEXGENPARAMETERISGISPROC) (GLenum pname, GLint
 typedef void (APIENTRYP PFNGLPIXELTEXGENPARAMETERIVSGISPROC) (GLenum pname, const GLint *params);
 typedef void (APIENTRYP PFNGLPIXELTEXGENPARAMETERFSGISPROC) (GLenum pname, GLfloat param);
 typedef void (APIENTRYP PFNGLPIXELTEXGENPARAMETERFVSGISPROC) (GLenum pname, const GLfloat *params);
-typedef void (APIENTRYP PFNGLGETPIXELTEXGENPARAMETERIVSGISPROC) (GLenum pname, GLint *params);
-typedef void (APIENTRYP PFNGLGETPIXELTEXGENPARAMETERFVSGISPROC) (GLenum pname, GLfloat *params);
+typedef void (APIENTRYP PFNGLgetBufferPixELTEXGENPARAMETERIVSGISPROC) (GLenum pname, GLint *params);
+typedef void (APIENTRYP PFNGLgetBufferPixELTEXGENPARAMETERFVSGISPROC) (GLenum pname, GLfloat *params);
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glPixelTexGenParameteriSGIS (GLenum pname, GLint param);
 GLAPI void APIENTRY glPixelTexGenParameterivSGIS (GLenum pname, const GLint *params);
 GLAPI void APIENTRY glPixelTexGenParameterfSGIS (GLenum pname, GLfloat param);
 GLAPI void APIENTRY glPixelTexGenParameterfvSGIS (GLenum pname, const GLfloat *params);
-GLAPI void APIENTRY glGetPixelTexGenParameterivSGIS (GLenum pname, GLint *params);
-GLAPI void APIENTRY glGetPixelTexGenParameterfvSGIS (GLenum pname, GLfloat *params);
+GLAPI void APIENTRY glgetBufferPixelTexGenParameterivSGIS (GLenum pname, GLint *params);
+GLAPI void APIENTRY glgetBufferPixelTexGenParameterfvSGIS (GLenum pname, GLfloat *params);
 #endif
 #endif /* GL_SGIS_pixel_texture */
 

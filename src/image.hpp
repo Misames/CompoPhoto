@@ -43,7 +43,9 @@ public:
     string getFileName() const;
     size_t getSize() const;
     uint8_t *getData() const;
-    Pixel* getPix() const;
+    Pixel* getBufferPix() const;
+    
+
 
     // Method
     void print(string);
@@ -52,5 +54,7 @@ public:
     Image merge(Image);
     void resize(int, int);
     Image crop(int, int, int, int);
-    static Image backgroundMask(vector<Image>);
+    Image getImageMask(Image,int) const;
+    static Image getBackgroundMask(vector<Image>);
+    static Image composition(vector<Image>,Image);
 };

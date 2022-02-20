@@ -24,3 +24,11 @@ void Pixel::setPixel(int nr,int ng, int nb){
     this->g = ng;
     this->b = nb;
 }
+
+bool Pixel::operator==(const Pixel& p){					 					 	   	  
+    return (r==p.r && g==p.g && b==p.b);					 					 	   	  
+}	
+
+int Pixel::grey() const{
+    return (r+g+b)/3;
+}

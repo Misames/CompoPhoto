@@ -9,5 +9,6 @@ class Pixel{
     Pixel(int nr,int ng, int nb);
     Pixel(const Pixel &p);
     void setPixel(int nr,int ng, int nb);
-
+    bool operator==(const Pixel&);
+    int grey() const;
 };

@@ -160,7 +160,7 @@ uint8_t *Image::getData() const
     return data;
 }
 
-Pixel* Image::getPix() const
+Pixel* Image::getBufferPix() const
 {
 
     return bufferPix;
@@ -199,7 +199,7 @@ void Image::castToGrey()
         for (int i = 0; i < width*height; i++)
         {
             // On fait la moyenne de la couleur de nos pixels puis on divise par 3 pour obtenir le niv de gris
-            int gray = (bufferPix[i].r + bufferPix[i].g + bufferPix[i].b) / 3;
+            int gray = bufferPix[i].grey();
             bufferPix[i].r = gray;
             bufferPix[i].g = gray;
             bufferPix[i].b = gray;
@@ -219,7 +219,7 @@ Image Image::merge(Image img)
 void Image::resize(int w, int h)
 {
     Image res = Image(w, h);
-    res.setBufferPix(this->getPix());				 					 	   	  
+    res.setBufferPix(this->getBufferPix());				 					 	   	  
 
     float sx = width/w;					 					 	   	  
     float sy = height/h;				 					 	   	  
@@ -239,7 +239,32 @@ Image Image::crop(int top, int left, int bottom, int right)
     return res;
 }
 
-Image Image::backgroundMask(vector<Image> tabIm){
+
+Image Image::getImageMask(Image background,int threshold) const{
+    Image res = Image(background);
+
+    int w = background.getWidth();
+    int h = background.getHeight();
+    Pixel * tmp = background.getBufferPix();
+    for (int x = 0; x < w;x++)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            if(abs(bufferPix[x+y*w].grey() - tmp[x+y*w].grey())<threshold){
+                res.bufferPix[x+y*width] = Pixel(0,0,0);
+            }
+            else{
+                res.bufferPix[x+y*width] = bufferPix[x+y*width];
+            }
+
+        }
+        
+    }
+    return res;
+
+}
+
+Image Image::getBackgroundMask(vector<Image> tabIm){
 					 					 	   	  
 
     Image res = Image(tabIm[0]);
@@ -258,9 +283,9 @@ Image Image::backgroundMask(vector<Image> tabIm){
             int b[l];			 					 	   	  
 
             for(int i =0; i<l;i++){
-                r[i] = tabIm[i].getPix()[x+y*w].r;
-                g[i] = tabIm[i].getPix()[x+y*w].g;
-                b[i] = tabIm[i].getPix()[x+y*w].b;
+                r[i] = tabIm[i].getBufferPix()[x+y*w].r;
+                g[i] = tabIm[i].getBufferPix()[x+y*w].g;
+                b[i] = tabIm[i].getBufferPix()[x+y*w].b;
 
             }
 
@@ -272,4 +297,25 @@ Image Image::backgroundMask(vector<Image> tabIm){
     }
 
     return res;				 					 	   	  
+}
+
+Image Image::composition(vector<Image> tabMask,Image back){
+    Image res = Image(back);
+
+    int w = back.getWidth();
+    int h = back.getHeight();
+    int l = tabMask.size();
+    for (int x = 0; x < w;x++)
+    {
+        for (int y = 0; y < h; y++)
+        {
+            for(int i =0; i<l;i++){
+                if(tabMask[i].getBufferPix()[x+y*w].grey() != 0){
+                    res.bufferPix[x+y*w] = tabMask[i].getBufferPix()[x+y*w];
+                }
+            }
+        }
+    }
+    return res;
+
 }
