@@ -52,7 +52,7 @@ public:
     void free();
     void castToGrey();
     Image merge(Image);
-    void resize(int, int);
+    Image resize(int, int);
     Image crop(int, int, int, int);
     Image getImageMask(Image,int) const;
     static Image getBackgroundMask(vector<Image>);

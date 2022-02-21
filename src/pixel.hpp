@@ -1,4 +1,5 @@
 
+// classe pixel pour plus facilement gérer les composants r,g,b
 class Pixel{
     public:
     int r;

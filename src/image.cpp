@@ -47,7 +47,6 @@ Image::Image(int w, int h)
 
 Image::Image(string src)
 {
-    cout<<src<<endl;
     data = stbi_load(src.c_str(), &width, &height, &channels, 0);
     if (data != nullptr)
     {
@@ -176,6 +175,7 @@ void Image::print(string fname)
     stbi_write_jpg(fname.c_str(), width, height, channels, data , width * channels);
 }
 
+// On libère les ressources d'un image 
 void Image::free()
 {
     if (data != nullptr)
@@ -190,6 +190,7 @@ void Image::free()
     }
 }
 
+// Renvoie l'image tout en gris, on conserve le channel 3
 void Image::castToGrey()
 {
     if (channels < 3)
@@ -207,16 +208,8 @@ void Image::castToGrey()
     }
 }
 
-
-Image Image::merge(Image img)
-{
-    Image res = Image(*this);
-    for (int i = 0; i < size; i++)
-        data[i] += data[i];
-    return res;
-}
-
-void Image::resize(int w, int h)
+// Resize l'image à la bonne taille
+Image Image::resize(int w, int h)
 {
     Image res = Image(w, h);
     res.setBufferPix(this->getBufferPix());				 					 	   	  
@@ -230,16 +223,32 @@ void Image::resize(int w, int h)
             res.bufferPix[x + y * width] = this->bufferPix[(int)(x * sx + y * sy)];
         }
     }
-}
-
-Image Image::crop(int top, int left, int bottom, int right)
-{
-    Image res = Image(*this);
-    // algo de crop sur image copier
     return res;
 }
 
+// Retourne une Crop l'image pour correspondre à la bonne taille
+Image Image::crop(int top, int left, int nwidth, int nheight)
+{
+    Image res = Image(*this);
+    res.width = nwidth;
+    res.height = nheight;
+    res.size = nwidth*nheight*channels;
+    Pixel* newbuffer = new Pixel[nwidth*nheight];
+    for (int x = left; x < nwidth; x++)
+    {
+        for (int y = top; y < nheight; y++)
+        {
+           newbuffer[x + y * nwidth] = bufferPix[x + y * width];
+        }
+    }
 
+    delete[] res.bufferPix;
+    res.bufferPix = newbuffer;
+
+    return res;
+}
+
+// Renvoie le masque de l'image courrante comparé au background
 Image Image::getImageMask(Image background,int threshold) const{
     Image res = Image(background);
 
@@ -264,6 +273,7 @@ Image Image::getImageMask(Image background,int threshold) const{
 
 }
 
+// Renvoie le background des images données
 Image Image::getBackgroundMask(vector<Image> tabIm){
 					 					 	   	  
 
@@ -299,6 +309,7 @@ Image Image::getBackgroundMask(vector<Image> tabIm){
     return res;				 					 	   	  
 }
 
+// Fait la composition finale avec les masques et le background
 Image Image::composition(vector<Image> tabMask,Image back){
     Image res = Image(back);
 

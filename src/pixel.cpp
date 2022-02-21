@@ -25,10 +25,12 @@ void Pixel::setPixel(int nr,int ng, int nb){
     this->b = nb;
 }
 
+// Opérateur de comparaison
 bool Pixel::operator==(const Pixel& p){					 					 	   	  
     return (r==p.r && g==p.g && b==p.b);					 					 	   	  
 }	
 
+// retourne le niveau de gris d'un pixel
 int Pixel::grey() const{
     return (r+g+b)/3;
 }
