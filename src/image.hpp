@@ -5,6 +5,7 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include "pixel.hpp"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ private:
     string fileName;
     size_t size;
     uint8_t *data;
-    vector<vector<int>> bufferPix;
+    Pixel *bufferPix;
 
 public:
     // Constructor
@@ -28,12 +29,14 @@ public:
     Image(string);
 
     // Setter
-    void setData(uint8_t *newData);
-    void setWidth(int newWidth);
-    void setHeight(int newHeight);
-    void setChannels(int newChannel);
-    void setSize(size_t newSize);
-    void setBufferPix(vector<vector<int>> newBuffer);
+    void setData(uint8_t *);
+    void saveToData();
+    void setWidth(int);
+    void setHeight(int);
+    void setChannels(int);
+    void setSize(size_t);
+    void setBufferPix(Pixel *);
+    void setPixel(int, int, Pixel);
 
     // Getter
     int getWidth() const;
@@ -42,15 +45,15 @@ public:
     string getFileName() const;
     size_t getSize() const;
     uint8_t *getData() const;
-    vector<vector<int>> getPix() const;
+    Pixel *getBufferPix() const;
 
     // Method
-    void print(string fileOutPutName);
-    void resize(int width, int height);
+    void print(string);
     void castToGrey();
-
-    // à faire
-    Image crop(int top, int left, int right, int bot);
-    Image merge(Image secondImage);
-    Image createMask(vector<Image> images);
+    Image merge(Image);
+    Image resize(int, int);
+    Image crop(int, int, int, int);
+    Image getImageMask(Image, int) const;
+    static Image getBackgroundMask(vector<Image>);
+    static Image composition(vector<Image>, Image);
 };

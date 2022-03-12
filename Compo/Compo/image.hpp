@@ -40,7 +40,7 @@ public:
     string getFileName() const;
     size_t getSize() const;
     uint8_t *getData() const;
-    vector<vector<int>> getPix() const;
+    vector<vector<int>> getBufferPix() const;
 
     // Method
     void print(string);

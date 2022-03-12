@@ -24,7 +24,7 @@ Image::Image()
     this->bufferPix = {};
 }
 
-Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getPix())
+Image::Image(const Image &cpy) : width(cpy.getWidth()), height(cpy.getHeight()), channels(cpy.getChannels()), data(cpy.getData()), size(cpy.getSize()), fileName(cpy.getFileName()), bufferPix(cpy.getBufferPix())
 {
 }
 
@@ -129,7 +129,7 @@ uint8_t *Image::getData() const
     return data;
 }
 
-vector<vector<int>> Image::getPix() const
+vector<vector<int>> Image::getBufferPix() const
 {
     return bufferPix;
 }
@@ -184,7 +184,7 @@ Image Image::resize(int w, int h)
     Image res = Image(w, h);
     float rotaX = this->width / w;
     float rotaY = this->height / h;
-    res.setBufferPix(this->getPix());
+    res.setBufferPix(this->getBufferPix());
     res.setData(this->getData());
 
     for (int x = 0; x < this->width; x++)

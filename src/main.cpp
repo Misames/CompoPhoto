@@ -1,10 +1,8 @@
-#include "image.hpp"
 #include <string>
 #include <vector>
-#include <filesystem>
+#include "image.hpp"
 
 using namespace std;
-using namespace filesystem;
 
 enum options
 {
@@ -17,29 +15,24 @@ enum options
 
 int main(int argc, char *argv[])
 {
-    string diretory, imgOutput, optionProgram;
-    vector<Image> mesImage;
+    string directory, optionProgram;
+    vector<Image> mesImages;
+    vector<Image> mesMasques;
+    directory = "img/";
 
-    if (argc == 3)
+    for (int i = 0; i < 9; i++)
     {
-        diretory = argv[1];
-        imgOutput = argv[2];
-        optionProgram = argv[3];
-    }
-    else
-    {
-        diretory = "img/";
-        imgOutput = "out_put.jpg";
-        optionProgram = "";
+        string src = directory + to_string(i) + ".jpg";
+        mesImages.push_back(Image(src));
     }
 
-    for (uint8_t i = 0; i < 9; i++)
-    {
-        Image img = Image(diretory + to_string(i) + ".jpg");
-        img.resize(700, 300);
-        img.castToGrey();
-        img.print(to_string(i) + imgOutput);
-    }
+    Image background = Image::getBackgroundMask(mesImages);
+
+    for (int i = 0; i < 9; i++)
+        mesMasques.push_back(mesImages[i].getImageMask(background, 15));
+
+    Image composition = Image::composition(mesMasques, background);
+    composition.print("composition.jpg");
 
     return 0;
 }
